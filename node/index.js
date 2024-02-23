@@ -1,6 +1,6 @@
 const express = require('express')
-const faker = require('faker')
 const app = express()
+const faker = require('faker')
 const port = process.env.APP_PORT || 3000
 
 const config = {
@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
     connection.query(`SELECT nome FROM people ORDER BY nome ASC`, (error, results, fields) => {
         res.send(`
         <h1>Full Cycle Rocks!!!</h1>
+        <h5>Refresh page to insert randomic name.</h5>
         <ul>
         ${results.map(el => `<li>${el.nome}</li>`).join('')}
         </ul>
@@ -30,5 +31,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log('Up on:', port);
+    console.log('Porta ativa:', port);
 })

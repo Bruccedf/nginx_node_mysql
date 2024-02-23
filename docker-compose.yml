@@ -18,8 +18,12 @@ services:
     restart: always
     build:
       context: ./node
+    volumes:
+      - ./node:/app
     depends_on:
       - db
+    ports:
+      - '3000:3000'
     networks:
       - node-network
 
