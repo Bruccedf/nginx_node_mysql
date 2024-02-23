@@ -21,3 +21,5 @@ Na sequencia, acesse a pasta criada:
 **Ver o resultado:**
 
 <kbd>http://localhost:8080</kbd>
+
+Dica: Pressione **F5** para atualizar a página, novos nomes serão acrescentados
