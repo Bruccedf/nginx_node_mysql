@@ -13,12 +13,11 @@ const config = {
 const mysql = require('mysql')
 
 const connection = mysql.createConnection(config)
+connection.query('CREATE TABLE IF NOT EXISTS people (id int NOT NULL AUTO_INCREMENT, nome varchar(255), PRIMARY KEY (id))')
 
 app.get('/', (req, res) => {
     const nameFaker = faker.name.findName()
-
     connection.query(`INSERT INTO people (nome) VALUES ('${nameFaker}')`)
-
     connection.query(`SELECT nome FROM people ORDER BY nome ASC`, (error, results, fields) => {
         res.send(`
         <h1>Full Cycle Rocks!!!</h1>

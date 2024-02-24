@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 
 services:
   nginx:
@@ -10,16 +10,19 @@ services:
       - '8080:80'
     depends_on:
       - node
+      - db
     networks:
       - node-network
   
   node:
-    container_name: node
-    restart: always
     build:
       context: ./node
+    container_name: node
+    restart: always
     volumes:
       - ./node:/app
+      - /app/node_modules
+    tty: true
     depends_on:
       - db
     ports:
@@ -28,18 +31,19 @@ services:
       - node-network
 
   db:
-    build: 
-      context: ./mysql
+    image: mysql:5.7
     container_name: db
+    command: --innodb-use-native-aio=0 | copy ./mysql/setup.sql /docker-entrypoint-initdb.d/
     restart: always
     tty: true
-    networks:
-      - node-network
     volumes:
       - ./mysql/volume:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - node-network
+
 networks:
   node-network:
     driver: bridge
