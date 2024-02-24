@@ -17,13 +17,19 @@ connection.query('CREATE TABLE IF NOT EXISTS people (id int NOT NULL AUTO_INCREM
 
 app.get('/', (req, res) => {
     const nameFaker = faker.name.findName()
-    connection.query(`INSERT INTO people (nome) VALUES ('${nameFaker}')`)
+    const traitName = connection.escape(nameFaker); //Trata nomes com apóstrofos
+    connection.query(`INSERT INTO people (nome) VALUES (${traitName})`)
     connection.query(`SELECT nome FROM people ORDER BY nome ASC`, (error, results, fields) => {
+        const sanitizedResults = results.map(el => {
+            return { nome: el.nome.replace(/\\/g, '') }; // Remove barras invertidas de nomes com apóstrofos, por exemplo: O\'Connor
+        });
+        const totalNames = sanitizedResults.length; // Calcula o número total de nomes cadastrados
         res.send(`
         <h1>Full Cycle Rocks!!!</h1>
-        <h5>Refresh page to insert randomic name.</h5>
+        <h5>Refresh page to insert a random name.</h5>
+        <p>Registrations: ${totalNames}</p>
         <ul>
-        ${results.map(el => `<li>${el.nome}</li>`).join('')}
+        ${sanitizedResults.map(el => `<li>${el.nome}</li>`).join('')}
         </ul>
     `)
     })
